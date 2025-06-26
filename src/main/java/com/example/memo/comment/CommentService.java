@@ -3,6 +3,8 @@ package com.example.memo.comment;
 import com.example.memo.post.Post;
 import com.example.memo.post.PostRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -38,6 +40,11 @@ public class CommentService
     public Comment findById(Long id) {
         return commentRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("댓글이 없습니다."));
+    }
+
+    //댓글 페이지 조회
+    public Page<Comment> findAllPaged(Long postId, Pageable pageable) {
+        return commentRepository.findByPostId(postId, pageable);
     }
     //댓글 수정
     public void update(Long id, String content) {

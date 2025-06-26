@@ -2,6 +2,8 @@ package com.example.memo.post;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.cglib.core.Local;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -34,6 +36,10 @@ public class PostService
     // 전체 조회
     public List<Post> findAll() {
         return postRepository.findAllByOrderByCreatedAtDesc();
+    }
+    //페이지별 조회
+    public Page<Post> findAllPaged(Pageable pageable) {
+        return postRepository.findAll(pageable);
     }
     //특정 단어 포함된 게시글 조회
     public List<Post> findByTitleContaining(String keyword) {
