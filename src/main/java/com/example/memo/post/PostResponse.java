@@ -14,6 +14,7 @@ public class PostResponse
     private LocalDateTime updatedAt;
     private int viewCount;
     private int commentCount;
+    private int likesCount;
 
     public PostResponse(Post post)
     {
@@ -24,5 +25,6 @@ public class PostResponse
         this.updatedAt = post.getUpdatedAt();
         this.viewCount = post.getViewCount();
         this.commentCount = post.getComments() != null ? post.getComments().size() : 0;
+        this.likesCount = post.getLikes() != null ? post.getLikes().size() : 0;
     }
 }

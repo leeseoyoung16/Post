@@ -21,20 +21,20 @@ public class CommentController
 {
     private final CommentService commentService;
 
-    @PostMapping("/post/{postId}")
+    @PostMapping("/posts/{postId}")
     public ResponseEntity<Void> create(@PathVariable Long postId, @Valid @RequestBody CommentRequest commentRequest) {
         commentService.create(postId, commentRequest.getContent());
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @GetMapping("/post/{postId}")
+    @GetMapping("/posts/{postId}")
     public List<CommmetResponse> findAll(@PathVariable Long postId) {
         return commentService.findAll(postId).stream()
                 .map(CommmetResponse::new)
                 .toList();
     }
 
-    @GetMapping("/post/{postId}/paged")
+    @GetMapping("/posts/{postId}/paged")
     public Page<CommmetResponse> findAllPaged(@PathVariable Long postId,
                                               @PageableDefault(size = 5, sort = "updatedAt", direction = Sort.Direction.DESC) Pageable pageable) {
         return commentService.findAllPaged(postId, pageable)
