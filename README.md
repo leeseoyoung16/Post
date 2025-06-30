@@ -34,12 +34,12 @@ Spring Boot 기반으로 개발된 **게시판 API**입니다.
 
 | 메서드 | URI            | 설명             |
 |--------|----------------|------------------|
-| POST   | `/post`        | 게시글 등록      |
-| GET    | `/post`        | 게시글 목록 조회 |
-| GET    | `/post/{id}`   | 게시글 단건 조회 |
-| GET    | `/post/paged`  | 게시글 페이징 조회 |
-| PUT    | `/post/{id}`   | 게시글 수정      |
-| DELETE | `/post/{id}`   | 게시글 삭제      |
+| POST   | `/posts`        | 게시글 등록      |
+| GET    | `/posts`        | 게시글 목록 조회 |
+| GET    | `/posts/{id}`   | 게시글 단건 조회 |
+| GET    | `/posts/paged`  | 게시글 페이징 조회 |
+| PUT    | `/posts/{id}`   | 게시글 수정      |
+| DELETE | `/posts/{id}`   | 게시글 삭제      |
 
 ---
 
@@ -47,10 +47,10 @@ Spring Boot 기반으로 개발된 **게시판 API**입니다.
 
 | 메서드 | URI                      | 설명                         |
 |--------|--------------------------|------------------------------|
-| POST   | `/comment/post/{postId}` | 게시글에 댓글 등록           |
-| GET    | `/comment/post/{postId}` | 특정 게시글 댓글 전체 조회   |
+| POST   | `/comment/posts/{postId}` | 게시글에 댓글 등록           |
+| GET    | `/comment/posts/{postId}` | 특정 게시글 댓글 전체 조회   |
 | GET    | `/comment/{id}`          | 댓글 단건 조회               |
-| GET    | `/comment/post/{postId}/paged` | 특정 게시글 댓글 페이징 조회   |
+| GET    | `/comment/posts/{postId}/paged` | 특정 게시글 댓글 페이징 조회   |
 | PUT    | `/comment/{id}`          | 댓글 수정                    |
 | DELETE | `/comment/{id}`          | 댓글 삭제                    |
 
