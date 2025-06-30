@@ -10,6 +10,7 @@ Spring Boot 기반으로 개발된 **게시판 API**입니다.
 - Java 17
 - Spring Boot 3.5.3
 - Spring Web / Spring Data JPA
+- Spring Security
 - Lombok / Validation
 - H2 Database (개발용)
 - Postman (API 테스트용)
@@ -24,11 +25,18 @@ Spring Boot 기반으로 개발된 **게시판 API**입니다.
 | 댓글 CRUD | ✅ | 게시글에 종속된 구조 |
 | 페이징 | ✅ | 게시글, 댓글 5개씩 페이징 |
 | 좋아요 | ✅ | 게시글에 좋아요 기능 |
-| 사용자 인증 | ⏳ | 회원가입, 로그인 기능 |
+| 사용자 인증 | ✅ | 회원가입, 로그인 기능 |
+| 사용자 인증 연결 | 🔜 | 사용자 인증을 다른 기능과 연결 |
 
 ---
 
 ## 🔗 주요 API 명세
+
+### 🔐 사용자 인증
+| 메서드 | URI            | 설명             |
+|--------|----------------|------------------|
+| POST   | `/auth/signup`   | 회원 가입      |
+| POST   | `/auth/login`   | 로그인      |
 
 ### 📄 게시글
 
