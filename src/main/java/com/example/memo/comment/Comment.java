@@ -1,6 +1,7 @@
 package com.example.memo.comment;
 
 import com.example.memo.post.Post;
+import com.example.memo.user.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,7 +19,8 @@ public class Comment
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // private String author;
+    @ManyToOne
+    private User author;
 
     private String content;
 

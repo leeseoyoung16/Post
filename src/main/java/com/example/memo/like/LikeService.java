@@ -2,8 +2,10 @@ package com.example.memo.like;
 
 import com.example.memo.post.Post;
 import com.example.memo.post.PostRepository;
+import com.example.memo.user.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -15,11 +17,15 @@ public class LikeService
     final PostRepository postRepository;
 
     //좋아요 생성
-    public void create(Long postId) {
+    @Transactional
+    public void create(Long postId, User user) {
         Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new IllegalArgumentException("게시글 없음"));
+                .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다."));
 
-        Like like = new Like(post);
+        if(likeRepository.findByUserAndPost(user, post).isPresent()) {
+            throw new IllegalArgumentException("이미 좋아요를 눌렀습니다.");
+        }
+        Like like = new Like(user, post);
         likeRepository.save(like);
 
         post.setLikeCount(post.getLikeCount() + 1);
@@ -27,17 +33,16 @@ public class LikeService
     }
 
     //좋아요 취소
-    public void delete(Long postId) {
+    @Transactional
+    public void delete(Long postId, User user) {
         Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new IllegalArgumentException("게시물 없음"));
+                .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다."));
 
-        List<Like> likes = likeRepository.findByPost(post);
-        if(likes.isEmpty()) throw new IllegalArgumentException("좋아요 없음");
+        Like like = likeRepository.findByUserAndPost(user, post)
+                        .orElseThrow(() -> new IllegalArgumentException("좋아요를 누르지 않았습니다."));
 
-        Like lastLike = likes.get(likes.size() - 1);
-        likeRepository.delete(lastLike);
-        post.setLikeCount(post.getLikeCount()-1);
+        likeRepository.delete(like);
+        post.setLikeCount(post.getLikeCount() - 1);
         postRepository.save(post);
-
     }
 }

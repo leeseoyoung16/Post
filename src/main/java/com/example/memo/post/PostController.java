@@ -1,5 +1,6 @@
 package com.example.memo.post;
 
+import com.example.memo.user.CustomUserDetails;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -8,6 +9,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,7 +18,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @Validated
-@RequestMapping("/post")
+@RequestMapping("/posts")
 public class PostController
 {
     private final PostService postService;
@@ -54,20 +56,23 @@ public class PostController
     }
 
     @PostMapping()
-    public ResponseEntity<Void> create(@Valid @RequestBody PostRequest postRequest) {
-        postService.create(postRequest.getTitle(), postRequest.getContent());
+    public ResponseEntity<Void> create(@Valid @RequestBody PostRequest postRequest,
+                                       @AuthenticationPrincipal CustomUserDetails userDetails) {
+        postService.create(postRequest.getTitle(), postRequest.getContent(), userDetails.getUser());
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
-        postService.delete(id);
+    public ResponseEntity<Void> delete(@PathVariable Long id,
+                                       @AuthenticationPrincipal CustomUserDetails userDetails) {
+        postService.delete(id, userDetails.getUser());
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Void> update(@PathVariable Long id,@Valid @RequestBody PostRequest postRequest) {
-        postService.update(id, postRequest.getTitle(), postRequest.getContent());
+    public ResponseEntity<Void> update(@PathVariable Long id,@Valid @RequestBody PostRequest postRequest,
+                                       @AuthenticationPrincipal CustomUserDetails userDetails) {
+        postService.update(id, postRequest.getTitle(), postRequest.getContent(), userDetails.getUser());
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 }

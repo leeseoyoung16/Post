@@ -1,6 +1,7 @@
 package com.example.memo.like;
 
 import com.example.memo.post.Post;
+import com.example.memo.user.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,7 +11,9 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-@Table(name = "likes")
+@Table(name = "likes", uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"user_id", "post_id"})
+})
 public class Like
 {
     @Id
@@ -21,7 +24,12 @@ public class Like
     @JoinColumn(name="post_id")
     private Post post;
 
-    public Like(Post post) {
+    @ManyToOne(optional = false)
+    @JoinColumn(name="user_id")
+    private User user;
+
+    public Like(User user, Post post) {
+        this.user = user;
         this.post = post;
     }
 }

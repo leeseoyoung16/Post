@@ -1,10 +1,13 @@
 package com.example.memo.post;
 
+import com.example.memo.user.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cglib.core.Local;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -16,13 +19,15 @@ public class PostService
     private final PostRepository postRepository;
 
     // 게시글 등록
-    public void create(String title, String content) {
+    @Transactional
+    public void create(String title, String content, User user) {
         Post post = new Post();
         post.setTitle(title);
         post.setContent(content);
         post.setCreatedAt(LocalDateTime.now());
         post.setUpdatedAt(LocalDateTime.now());
         post.setViewCount(0);
+        post.setAuthor(user);
         postRepository.save(post);
     }
     // 단건 조회
@@ -46,15 +51,27 @@ public class PostService
         return postRepository.findByTitleContaining(keyword);
     }
     //게시글 삭제
-    public void delete(Long id) {
-        postRepository.deleteById(id);
+    @Transactional
+    public void delete(Long id, User user) {
+        Post post = postRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("게시글이 존재하지 않습니다."));
+        if(!post.getAuthor().getId().equals(user.getId())) {
+            throw new AccessDeniedException("작성자 본인만 삭제할 수 있습니다.");
+        }
+        postRepository.delete(post);
     }
     // 게시글 수정
-    public void update(Long id, String title, String content) {
-        Post post = findById(id);
+    @Transactional
+    public void update(Long id, String title, String content, User user) {
+        Post post = postRepository.findById(id)
+                        .orElseThrow(() -> new IllegalArgumentException("게시글이 존재하지 않습니다."));
+        if(!post.getAuthor().getId().equals(user.getId())) {
+            throw new AccessDeniedException("작성자 본인만 수정할 수 있습니다.");
+        }
         post.setTitle(title);
         post.setContent(content);
         post.setUpdatedAt(LocalDateTime.now());
+        postRepository.save(post);
     }
 
 }
