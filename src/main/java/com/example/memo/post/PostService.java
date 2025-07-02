@@ -1,6 +1,7 @@
 package com.example.memo.post;
 
 import com.example.memo.user.User;
+import com.example.memo.user.UserRole;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cglib.core.Local;
 import org.springframework.data.domain.Page;
@@ -55,6 +56,10 @@ public class PostService
     public void delete(Long id, User user) {
         Post post = postRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("게시글이 존재하지 않습니다."));
+        if(user.getRole() == UserRole.ADMIN) {
+            postRepository.delete(post);
+            return;
+        }
         if(!post.getAuthor().getId().equals(user.getId())) {
             throw new AccessDeniedException("작성자 본인만 삭제할 수 있습니다.");
         }

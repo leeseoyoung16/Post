@@ -3,6 +3,7 @@ package com.example.memo.comment;
 import com.example.memo.post.Post;
 import com.example.memo.post.PostRepository;
 import com.example.memo.user.User;
+import com.example.memo.user.UserRole;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -40,6 +41,10 @@ public class CommentService
     public void delete(Long id, User user) {
         Comment comment = commentRepository.findById(id).
                 orElseThrow(() -> new IllegalArgumentException("댓글이 없습니다."));
+        if(user.getRole() == UserRole.ADMIN) {
+            commentRepository.delete(comment);
+            return;
+        }
         if(!comment.getAuthor().getId().equals(user.getId())) {
             throw new AccessDeniedException("댓글 작성자만 삭제할 수 있습니다.");
         }
