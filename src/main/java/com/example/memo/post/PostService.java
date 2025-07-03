@@ -28,6 +28,7 @@ public class PostService
         post.setCreatedAt(LocalDateTime.now());
         post.setUpdatedAt(LocalDateTime.now());
         post.setViewCount(0);
+        post.setCommentCount(0);
         post.setAuthor(user);
         postRepository.save(post);
     }

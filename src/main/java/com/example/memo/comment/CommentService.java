@@ -34,6 +34,7 @@ public class CommentService
         comment.setAuthor(user);
         comment.setCreatedAt(LocalDateTime.now());
         comment.setUpdatedAt(LocalDateTime.now());
+        post.setCommentCount(post.getCommentCount()+1);
         commentRepository.save(comment);
     }
     //댓글 삭제
@@ -42,12 +43,16 @@ public class CommentService
         Comment comment = commentRepository.findById(id).
                 orElseThrow(() -> new IllegalArgumentException("댓글이 없습니다."));
         if(user.getRole() == UserRole.ADMIN) {
+            Post post = comment.getPost();
+            post.setCommentCount(post.getCommentCount()-1);
             commentRepository.delete(comment);
             return;
         }
         if(!comment.getAuthor().getId().equals(user.getId())) {
             throw new AccessDeniedException("댓글 작성자만 삭제할 수 있습니다.");
         }
+        Post post = comment.getPost();
+        post.setCommentCount(post.getCommentCount()-1);
         commentRepository.delete(comment);
     }
     //댓글 조회

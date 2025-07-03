@@ -39,6 +39,9 @@ public class Post
     @Column(nullable = false)
     private int likeCount;
 
+    @Column(nullable = false)
+    private int commentCount;
+
     @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<Comment> comments = new ArrayList<>();
 
