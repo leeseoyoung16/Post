@@ -23,18 +23,24 @@ public class CommentService
 
     // 댓글 등록
     @Transactional
-    public void create(Long postId, String content, User user)
+    public void create(Long postId, CommentRequest request, User user)
     {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new IllegalArgumentException("게시글이 없습니다."));
 
         Comment comment = new Comment();
         comment.setPost(post);
-        comment.setContent(content);
+        comment.setContent(request.getContent());
         comment.setAuthor(user);
         comment.setCreatedAt(LocalDateTime.now());
         comment.setUpdatedAt(LocalDateTime.now());
         post.setCommentCount(post.getCommentCount()+1);
+
+        if(request.getParentId() != null) {
+            Comment parent = commentRepository.findById(request.getParentId())
+                    .orElseThrow(() -> new IllegalArgumentException("부모 댓글이 존재하지 않습니다."));
+            comment.setParent(parent);
+        }
         commentRepository.save(comment);
     }
     //댓글 삭제
@@ -55,8 +61,12 @@ public class CommentService
         post.setCommentCount(post.getCommentCount()-1);
         commentRepository.delete(comment);
     }
-    //댓글 조회
-    public List<Comment> findAll(Long postId) {
+    //댓글 모두 조회
+    public List<Comment> findAll() {
+        return commentRepository.findAll();
+    }
+    //게시글 당 댓글 조회
+    public List<Comment> findByPost(Long postId) {
         return commentRepository.findByPostId(postId);
     }
     //댓글 단건 조회

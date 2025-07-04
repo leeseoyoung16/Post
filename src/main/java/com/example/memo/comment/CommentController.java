@@ -14,11 +14,12 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
 @Validated
-@RequestMapping("/comment")
+@RequestMapping("/comments")
 public class CommentController
 {
     private final CommentService commentService;
@@ -26,28 +27,36 @@ public class CommentController
     @PostMapping("/posts/{postId}")
     public ResponseEntity<Void> create(@PathVariable Long postId, @Valid @RequestBody CommentRequest commentRequest,
                                        @AuthenticationPrincipal CustomUserDetails userDetails) {
-        commentService.create(postId, commentRequest.getContent(),userDetails.getUser());
+        commentService.create(postId, commentRequest,userDetails.getUser());
         return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+    @GetMapping()
+    public List<CommetResponse> findAll() {
+        return commentService.findAll()
+                .stream()
+                .map(CommetResponse::new)
+                .collect(Collectors.toList());
     }
 
     @GetMapping("/posts/{postId}")
-    public List<CommmetResponse> findAll(@PathVariable Long postId) {
-        return commentService.findAll(postId).stream()
-                .map(CommmetResponse::new)
-                .toList();
+    public List<CommetResponse> findByPost(@PathVariable Long postId) {
+        return commentService.findByPost(postId)
+                .stream()
+                .map(CommetResponse::new)
+                .collect(Collectors.toList());
     }
 
     @GetMapping("/posts/{postId}/paged")
-    public Page<CommmetResponse> findAllPaged(@PathVariable Long postId,
+    public Page<CommetResponse> findAllPaged(@PathVariable Long postId,
                                               @PageableDefault(size = 5, sort = "updatedAt", direction = Sort.Direction.DESC) Pageable pageable) {
         return commentService.findAllPaged(postId, pageable)
-                .map(CommmetResponse::new);
+                .map(CommetResponse::new);
     }
 
     @GetMapping("/{id}")
-    public CommmetResponse findById(@PathVariable Long id) {
+    public CommetResponse findById(@PathVariable Long id) {
         Comment comment = commentService.findById(id);
-        return new CommmetResponse(comment);
+        return new CommetResponse(comment);
     }
 
     @DeleteMapping("/{id}")

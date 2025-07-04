@@ -2,6 +2,7 @@ package com.example.memo;
 
 import com.example.memo.comment.Comment;
 import com.example.memo.comment.CommentRepository;
+import com.example.memo.comment.CommentRequest;
 import com.example.memo.comment.CommentService;
 import com.example.memo.post.Post;
 import com.example.memo.post.PostRepository;
@@ -15,6 +16,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -50,9 +53,10 @@ public class CommentServiceTest
         Post savePost = postRepository.findByTitleContaining(title).get(0);
         Long postId = savePost.getId();
 
-        String comment = "댓글 작성";
+        CommentRequest request = new CommentRequest();
+        request.setContent("댓글 작성");
         //When
-        commentService.create(postId, comment, user);
+        commentService.create(postId, request, user);
         //Then
         Post checked = postRepository.findById(postId).get();
         assertThat(checked.getCommentCount()).isEqualTo(1);
@@ -73,8 +77,10 @@ public class CommentServiceTest
         Post savePost = postRepository.findByTitleContaining(title).get(0);
         Long postId = savePost.getId();
 
-        String commentContent = "댓글 작성";
-        commentService.create(postId, commentContent, user);
+        CommentRequest request = new CommentRequest();
+        request.setContent("댓글 작성");
+        commentService.create(postId, request, user);
+
         Comment savedComment = commentRepository.findByPostId(postId).get(0);
         Long commentId = savedComment.getId();
         //When
@@ -82,6 +88,38 @@ public class CommentServiceTest
         //Then
         Comment updated = commentRepository.findById(commentId).orElseThrow();
         assertThat(updated.getContent()).isEqualTo("댓글 수정");
+    }
+
+    @Test
+    @DisplayName("대댓글 작성 성공")
+    void 대댓글_성공() {
+        //Given
+        User user = new User();
+        user.setUsername("testuser");
+        user.setPassword("123456");
+        userRepository.save(user);
+
+        String title = "제목";
+        String content = "내용";
+        postService.create(title, content, user);
+        Post savePost = postRepository.findByTitleContaining(title).get(0);
+        Long postId = savePost.getId();
+
+        CommentRequest request = new CommentRequest();
+        request.setContent("댓글 작성");
+        commentService.create(postId, request, user);
+        Long savedCommentId = commentRepository.findByPostId(postId).get(0).getId();
+
+        CommentRequest Rerequest = new CommentRequest();
+        Rerequest.setContent("대댓글 작성");
+        Rerequest.setParentId(savedCommentId);
+        //When
+        commentService.create(postId, Rerequest, user);
+        //Then
+        List<Comment> comments = commentRepository.findByPostId(postId);
+        Comment childComment = comments.get(1);
+        assertThat(childComment.getContent()).isEqualTo("대댓글 작성");
+        assertThat(childComment.getParent().getId()).isEqualTo(savedCommentId);
     }
 
     @Test
@@ -104,8 +142,10 @@ public class CommentServiceTest
         Post savePost = postRepository.findByTitleContaining(title).get(0);
         Long postId = savePost.getId();
 
-        String commentContent = "댓글 작성";
-        commentService.create(postId, commentContent, user);
+        CommentRequest request = new CommentRequest();
+        request.setContent("댓글 작성");
+        commentService.create(postId, request, user);
+
         Comment savedComment = commentRepository.findByPostId(postId).get(0);
         Long commentId = savedComment.getId();
         //When
@@ -130,8 +170,10 @@ public class CommentServiceTest
         Post savePost = postRepository.findByTitleContaining(title).get(0);
         Long postId = savePost.getId();
 
-        String commentContent = "댓글 작성";
-        commentService.create(postId, commentContent, user);
+        CommentRequest request = new CommentRequest();
+        request.setContent("댓글 작성");
+        commentService.create(postId, request, user);
+
         Comment savedComment = commentRepository.findByPostId(postId).get(0);
         Long commentId = savedComment.getId();
         //When
@@ -161,8 +203,10 @@ public class CommentServiceTest
         Post savePost = postRepository.findByTitleContaining(title).get(0);
         Long postId = savePost.getId();
 
-        String commentContent = "댓글 작성";
-        commentService.create(postId, commentContent, user);
+        CommentRequest request = new CommentRequest();
+        request.setContent("댓글 작성");
+        commentService.create(postId, request, user);
+
         Comment savedComment = commentRepository.findByPostId(postId).get(0);
         Long commentId = savedComment.getId();
         //When
