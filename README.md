@@ -59,12 +59,12 @@ Spring Boot 기반으로 개발된 **게시판 API**입니다.
 
 | 메서드 | URI                      | 설명                         |
 |--------|--------------------------|------------------------------|
-| POST   | `/comment/posts/{postId}` | 게시글에 댓글 등록           |
-| GET    | `/comment/posts/{postId}` | 특정 게시글 댓글 전체 조회   |
-| GET    | `/comment/{id}`          | 댓글 단건 조회               |
-| GET    | `/comment/posts/{postId}/paged` | 특정 게시글 댓글 페이징 조회   |
-| PUT    | `/comment/{id}`          | 댓글 수정                    |
-| DELETE | `/comment/{id}`          | 댓글 삭제                    |
+| POST   | `/comments/posts/{postId}` | 게시글에 댓글 등록           |
+| GET    | `/comments/posts/{postId}` | 특정 게시글 댓글 전체 조회   |
+| GET    | `/comments/{id}`          | 댓글 단건 조회               |
+| GET    | `/comments/posts/{postId}/paged` | 특정 게시글 댓글 페이징 조회   |
+| PUT    | `/comments/{id}`          | 댓글 수정                    |
+| DELETE | `/comments/{id}`          | 댓글 삭제                    |
 
 ---
 
