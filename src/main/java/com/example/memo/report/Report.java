@@ -1,4 +1,4 @@
-package com.example.memo.like;
+package com.example.memo.report;
 
 import com.example.memo.post.Post;
 import com.example.memo.user.User;
@@ -11,24 +11,24 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-@Table(name = "likes", uniqueConstraints = {
+@Table(name = "reports", uniqueConstraints = {
         @UniqueConstraint(columnNames = {"user_id", "post_id"})
 })
-public class Like
+public class Report
 {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    @JoinColumn(name="post_id")
-    private Post post;
-
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    @JoinColumn(name="user_id")
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    public Like(User user, Post post) {
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @JoinColumn(name = "post_id", nullable = false)
+    private Post post;
+
+    public Report(User user, Post post) {
         this.user = user;
         this.post = post;
     }

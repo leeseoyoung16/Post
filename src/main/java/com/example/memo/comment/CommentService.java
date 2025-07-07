@@ -34,7 +34,6 @@ public class CommentService
         comment.setAuthor(user);
         comment.setCreatedAt(LocalDateTime.now());
         comment.setUpdatedAt(LocalDateTime.now());
-        post.setCommentCount(post.getCommentCount()+1);
 
         if(request.getParentId() != null) {
             Comment parent = commentRepository.findById(request.getParentId())
@@ -50,7 +49,6 @@ public class CommentService
                 orElseThrow(() -> new IllegalArgumentException("댓글이 없습니다."));
         if(user.getRole() == UserRole.ADMIN) {
             Post post = comment.getPost();
-            post.setCommentCount(post.getCommentCount()-1);
             commentRepository.delete(comment);
             return;
         }
@@ -58,7 +56,6 @@ public class CommentService
             throw new AccessDeniedException("댓글 작성자만 삭제할 수 있습니다.");
         }
         Post post = comment.getPost();
-        post.setCommentCount(post.getCommentCount()-1);
         commentRepository.delete(comment);
     }
     //댓글 모두 조회

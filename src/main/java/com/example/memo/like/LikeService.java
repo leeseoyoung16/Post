@@ -23,12 +23,10 @@ public class LikeService
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다."));
 
         if(likeRepository.findByUserAndPost(user, post).isPresent()) {
-            throw new IllegalArgumentException("이미 좋아요를 눌렀습니다.");
+            throw new IllegalArgumentException("이미 좋아요한 게시물입니다.");
         }
         Like like = new Like(user, post);
         likeRepository.save(like);
-
-        post.setLikeCount(post.getLikeCount() + 1);
         postRepository.save(post);
     }
 
@@ -42,7 +40,6 @@ public class LikeService
                         .orElseThrow(() -> new IllegalArgumentException("좋아요를 누르지 않았습니다."));
 
         likeRepository.delete(like);
-        post.setLikeCount(post.getLikeCount() - 1);
         postRepository.save(post);
     }
 }

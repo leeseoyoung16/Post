@@ -51,7 +51,7 @@ public class LikeServiceTest
         likeService.create(postId, user);
         //Then
         Post updated = postRepository.findById(postId).orElseThrow();
-        assertThat(updated.getLikeCount()).isEqualTo(1);
+        assertThat(updated.getLikes().size()).isEqualTo(1);
     }
 
     @Test
@@ -95,7 +95,7 @@ public class LikeServiceTest
         likeService.delete(postId, user);
         //Then
         Post updated = postRepository.findById(postId).orElseThrow();
-        assertThat(updated.getLikeCount()).isEqualTo(0);
+        assertThat(updated.getLikes().size()).isEqualTo(0);
     }
 
     @Test

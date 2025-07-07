@@ -59,7 +59,7 @@ public class CommentServiceTest
         commentService.create(postId, request, user);
         //Then
         Post checked = postRepository.findById(postId).get();
-        assertThat(checked.getCommentCount()).isEqualTo(1);
+        assertThat(checked.getComments().size()).isEqualTo(1);
     }
 
     @Test
@@ -180,7 +180,7 @@ public class CommentServiceTest
         commentService.delete(commentId, user);
         //Then
         Post updated = postRepository.findById(postId).orElseThrow();
-        assertThat(updated.getCommentCount()).isEqualTo(0);
+        assertThat(updated.getComments().size()).isEqualTo(0);
     }
 
     @Test

@@ -16,6 +16,7 @@ public class PostResponse
     private String author;
     private int commentCount;
     private int likesCount;
+    private int reportCount;
 
     public PostResponse(Post post)
     {
@@ -28,5 +29,6 @@ public class PostResponse
         this.author = post.getAuthor().getUsername();
         this.commentCount = post.getComments() != null ? post.getComments().size() : 0;
         this.likesCount = post.getLikes() != null ? post.getLikes().size() : 0;
+        this.reportCount = post.getReports() != null ? post.getReports().size() : 0;
     }
 }

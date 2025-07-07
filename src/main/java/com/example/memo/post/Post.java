@@ -2,6 +2,7 @@ package com.example.memo.post;
 
 import com.example.memo.comment.Comment;
 import com.example.memo.like.Like;
+import com.example.memo.report.Report;
 import com.example.memo.user.User;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -36,16 +37,13 @@ public class Post
     @Column(nullable = false)
     private int viewCount;
 
-    @Column(nullable = false)
-    private int likeCount;
-
-    @Column(nullable = false)
-    private int commentCount;
-
     @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<Comment> comments = new ArrayList<>();
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<Like> likes = new ArrayList<>();
+
+    @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<Report> reports = new ArrayList<>();
 
 }
