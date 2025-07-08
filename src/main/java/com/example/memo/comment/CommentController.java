@@ -31,32 +31,32 @@ public class CommentController
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
     @GetMapping()
-    public List<CommetResponse> findAll() {
+    public List<CommentResponse> findAll() {
         return commentService.findAll()
                 .stream()
-                .map(CommetResponse::new)
+                .map(CommentResponse::new)
                 .collect(Collectors.toList());
     }
 
     @GetMapping("/posts/{postId}")
-    public List<CommetResponse> findByPost(@PathVariable Long postId) {
+    public List<CommentResponse> findByPost(@PathVariable Long postId) {
         return commentService.findByPost(postId)
                 .stream()
-                .map(CommetResponse::new)
+                .map(CommentResponse::new)
                 .collect(Collectors.toList());
     }
 
     @GetMapping("/posts/{postId}/paged")
-    public Page<CommetResponse> findAllPaged(@PathVariable Long postId,
+    public Page<CommentResponse> findAllPaged(@PathVariable Long postId,
                                               @PageableDefault(size = 5, sort = "updatedAt", direction = Sort.Direction.DESC) Pageable pageable) {
         return commentService.findAllPaged(postId, pageable)
-                .map(CommetResponse::new);
+                .map(CommentResponse::new);
     }
 
     @GetMapping("/{id}")
-    public CommetResponse findById(@PathVariable Long id) {
+    public CommentResponse findById(@PathVariable Long id) {
         Comment comment = commentService.findById(id);
-        return new CommetResponse(comment);
+        return new CommentResponse(comment);
     }
 
     @DeleteMapping("/{id}")

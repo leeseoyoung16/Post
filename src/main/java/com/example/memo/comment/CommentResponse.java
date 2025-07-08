@@ -5,7 +5,7 @@ import lombok.Getter;
 import java.time.LocalDateTime;
 
 @Getter
-public class CommetResponse
+public class CommentResponse
 {
     private Long id;
     private String content;
@@ -15,7 +15,7 @@ public class CommetResponse
     private Long postId;
     private Long parentId;
 
-    public CommetResponse(Comment comment) {
+    public CommentResponse(Comment comment) {
         this.id = comment.getId();
         this.content = comment.getContent();
         this.author = comment.getAuthor().getUsername();

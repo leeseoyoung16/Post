@@ -1,4 +1,4 @@
-package com.example.memo;
+package com.example.memo.service;
 
 import com.example.memo.post.Post;
 import com.example.memo.post.PostRepository;
